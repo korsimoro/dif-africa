@@ -1,0 +1,47 @@
+---
+guid:
+  index: true
+  flavors:
+    _: Guid
+    kumu: ID
+  types:
+    sqlite: TEXT
+
+name:
+  index: true
+  flavors:
+    _: Name
+
+agendaLink:
+  types: link
+  flavors:
+    _: agendaLink
+    notion: Notion Link
+
+focus:
+  flavors:
+    _: Country Spotlight
+
+events:
+  flavors:
+    _: Events
+
+legal:
+  flavors:
+    _: Legal
+
+business:
+  flavors:
+    _: Business
+
+responsibility:
+  flavors:
+    _: Responsibility
+
+social:
+  flavors:
+    _: Social
+
+when:
+  flavors:
+    _: When

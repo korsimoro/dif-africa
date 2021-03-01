@@ -1,0 +1,18 @@
+{% assign COUNTRY = page.country %}
+
+## Other
+{% include _data/countries/{{COUNTRY.guid}}.md %}
+
+## Kumu
+{% if COUNTRY.kumu %}
+  <iframe src="{{ COUNTRY.kumu }}" width="940" height="600" frameborder="0"></iframe>
+{% else %}
+  No Kumu map is yet ready
+{% endif %}
+
+## Wikipedia
+{% if COUNTRY.wikipedia %}
+  <iframe src="{{ COUNTRY.wikipedia }}" width="940" height="600" frameborder="0"></iframe>
+{% else %}
+  No Wikipedia page is available
+{% endif %}

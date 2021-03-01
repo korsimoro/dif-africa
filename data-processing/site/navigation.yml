@@ -1,0 +1,47 @@
+# did info links
+
+
+home:
+  - title: Zoom Info
+    url: /_pages/about#zoom
+  - title: Meeting Format
+    url: /_pages/about#meetings
+  - title: Propose A Topic
+    url: /_pages/about/#propose-a-topic-provide-feedback-or-suggest-improvements
+  - title: "Meeting Schedule"
+    url: /_pages/schedule
+  - title: Related Links
+    url: /_pages/about#links
+  - title: "Participate"
+    url: /_pages/about#participate
+  - title: "Projects"
+    url: /_pages/projects
+    children:
+      - title: Professional Directory
+        url: /_pages/projects#professional-directory
+      - title: The Kenya Challenge
+        url: /_pages/projects#the-keyna-challenge
+      - title: Regulatory Directory
+        url: /_pages/projects#regulatory-directory
+      - title: Translation Directory
+        url: /_pages/projects#translation-directory
+  - title: "Database"
+    url: /_pages/database/
+    children:
+      - title: Countries
+        url: /_pages/countries
+      - title: Companies
+        url: /_pages/companies
+      - title: Giant Kumu Map
+        url: /_pages/database#kumu
+      - title: Data Model
+        url: /_pages/database#model
+
+# main links
+main:
+  - title: "Countries"
+    url: /_pages/countries/
+  - title: "Companies"
+    url: /_pages/companies/
+  - title: "Community"
+    url: /_pages/about#community

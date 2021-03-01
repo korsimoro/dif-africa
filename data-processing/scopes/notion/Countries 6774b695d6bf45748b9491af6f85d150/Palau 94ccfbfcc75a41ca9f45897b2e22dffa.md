@@ -1,0 +1,3 @@
+# Palau
+
+Continent: Oceania

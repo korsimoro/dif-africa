@@ -1,0 +1,161 @@
+require 'yaml'
+require 'date'
+class GenericFile
+  def initialize(site,name)
+    @site = site
+    @path = File.join(site.source,'_data',name)
+    @data = YAML.load_file(@path)
+  end
+  def site
+    @site
+  end
+  def save()
+    File.open(@path, "w") { |file| file.write(@data.to_yaml) }
+  end
+end
+
+class SourcesFile < GenericFile
+  def initialize(site)
+    super(site,'sources.yml')
+    @schedule = @data['notion']['raw']['schedule']
+  end
+
+  def read_schedule_last_update()
+    date_str = @schedule['processed']
+    if date_str
+      Date.parse(date_str)
+    end
+  end
+  def read_schedule_guid()
+    @schedule['guid']
+  end
+  def record_schedule_update()
+    puts "updating"
+    puts Date.today.inspect
+    @schedule['processed'] = Date.today.to_s
+    self.save
+  end
+end
+
+class ScheduleFile < GenericFile
+  def initialize(site)
+    super(site,'Schedule.yml')
+    @date_map = {}
+    @name_map = {}
+    @data.each do [entry]
+      entry = new ScheduleEntry
+      @date_map[entry['When']]
+    @schedule = @data['notion']['raw']['schedule']
+  end
+  def site
+    @site
+  end
+  def save()
+    File.open(@path, "w") { |file| file.write(@data.to_yaml) }
+  end
+  def read_schedule_last_update()
+    date_str = @schedule['processed']
+    if date_str
+      Date.parse(date_str)
+    end
+  end
+  def read_schedule_guid()
+    @schedule['guid']
+  end
+  def record_schedule_update()
+    puts "updating"
+    puts Date.today.inspect
+    @schedule['processed'] = Date.today.to_s
+    self.save
+  end
+end
+
+class MCPDatabase
+  def initialize(site,file)
+    @path = File.join(site.source,'_data',file + '.yml')
+    @data = YAML.load_file(@path)
+    @guid_map = {}
+    @index_map = {}
+    @index_map['guid'] = @guid_map
+  end
+  def save()
+    File.open(@path, "w") { |file| file.write(@data.to_yaml) }
+  end
+  def add
+end
+
+class YamlDatabase
+  def initialize(site,file)
+    @path = File.join(site.source,'_data',file + '.yml')
+    @data = YAML.load_file(@path)
+    @guid_map = {}
+    @index_map = {}
+    @index_map['guid'] = @guid_map
+  end
+  def save()
+    File.open(@path, "w") { |file| file.write(@data.to_yaml) }
+  end
+  def add
+end
+
+class NotionImportFile
+  def initialize(guid,name,dir)
+    @dir = dir
+    @guid = guid
+    @name = name
+  end
+end
+class ScheduleEntry
+  def initialize(guid,name,dir,yaml)
+    @notion_file = NotionImportFile(guid,name,dir)
+    @guid = guid
+    @yaml = yaml
+    yaml['guid'] = guid
+  end
+
+  - "Name": February 2021
+    Business:
+    Country Spotlight:
+    Events: email-update, meeting
+    Legal:
+    Responsibility:
+    Social:
+    When: Feb 25, 2021
+
+end
+
+class ScheduleDatabase < YamlDatabase
+  def initialize(sources)
+    super(sources.site,'Schedule')
+    @notion_path = File.join(sources.site.source,'..','data-processing','scopes','notion')
+    guid = sources.read_schedule_guid
+    @csv = File.join(@notion_path,'Schedule '+guid+'.csv')
+    @dir = File.join(@notion_path,'Schedule '+guid)
+  end
+  def scan_dir()
+    Dir.each_child(@dir) do |filename|
+      res = /(?<name>.*)\ (?<guid>[0-9a-fA-F]{32})\.md/.match(filename)
+      guid = res['guid']
+      name = res['name']
+      @guid_map[guid] = NotionImportFile.new(guid,name,@dir)
+    end
+  end
+end
+
+def run_hook(site)
+  # code to call after Jekyll renders a page
+  sources = SourcesFile.new(site)
+  schedule_db = ScheduleDatabase.new(sources)
+  schedule_db.scan_dir
+end
+
+Jekyll::Hooks.register :site, :post_read do |site|
+
+  #require 'httplog' # require this *after* your HTTP gem of choice
+  begin
+    run_hook(site)
+  rescue => exception
+    puts exception.backtrace
+    raise # always reraise
+  end
+end

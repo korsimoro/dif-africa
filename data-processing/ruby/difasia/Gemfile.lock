@@ -1,0 +1,21 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    csv2json (0.3.0)
+      json
+    json (2.3.1)
+    json2yaml (0.0.3)
+      yajl-ruby
+    orderedhash (0.0.6)
+    yajl-ruby (1.4.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  csv2json
+  json2yaml
+  orderedhash
+
+BUNDLED WITH
+   2.1.4

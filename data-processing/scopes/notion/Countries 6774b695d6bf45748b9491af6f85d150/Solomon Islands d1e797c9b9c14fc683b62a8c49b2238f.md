@@ -1,0 +1,3 @@
+# Solomon Islands
+
+Continent: Oceania

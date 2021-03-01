@@ -1,0 +1,99 @@
+<!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+<script>
+const removeActiveClasses = function (ulElement) {
+    const lis = ulElement.querySelectorAll('li');
+    Array.prototype.forEach.call(lis, function(li) {
+        li.classList.remove('active');
+    });
+  }
+
+  const getChildPosition = function (element) {
+        var parent = element.parentNode;
+        var i = 0;
+        for (var i = 0; i < parent.children.length; i++) {
+            if (parent.children[i] === element) {
+                return i;
+            }
+        }
+
+        throw new Error('No parent found');
+    }
+
+window.addEventListener('load', function () {
+    const tabLinks = document.querySelectorAll('ul.tab li a');
+
+    Array.prototype.forEach.call(tabLinks, function(link) {
+      link.addEventListener('click', function (event) {
+        event.preventDefault();
+
+        liTab = link.parentNode;
+        ulTab = liTab.parentNode;
+        position = getChildPosition(liTab);
+        if (liTab.className.includes('active')) {
+          return;
+        }
+
+        removeActiveClasses(ulTab);
+        tabContentId = ulTab.getAttribute('data-tab');
+        tabContentElement = document.getElementById(tabContentId);
+        removeActiveClasses(tabContentElement);
+
+        tabContentElement.querySelectorAll('li')[position].classList.add('active');
+        liTab.classList.add('active');
+      }, false);
+    });
+});
+</script>
+<style>
+  .tab {
+      display: flex;
+      flex-wrap: wrap;
+      margin-left: -20px;
+      padding: 0;
+      list-style: none;
+      position: relative;
+  }
+
+  .tab > * {
+      flex: none;
+      padding-left: 20px;
+      position: relative;
+  }
+
+  .tab > * > a {
+      display: block;
+      text-align: center;
+      padding: 9px 20px;
+      color: #999;
+      border-bottom: 2px solid transparent;
+      border-bottom-color: transparent;
+      font-size: 12px;
+      text-transform: uppercase;
+      transition: color .1s ease-in-out;
+      line-height: 20px;
+  }
+
+  .tab > .active > a {
+      color:#222;
+      border-color: #1e87f0;
+  }
+
+  .tab li a {
+      text-decoration: none;
+          cursor: pointer;
+  }
+
+  .tab-content{
+      padding: 0;
+  }
+
+  .tab-content li {
+      display: none;
+  }
+  .tab-content li.active {
+      display: initial;
+  }
+</style>
+<!-- end custom head snippets -->

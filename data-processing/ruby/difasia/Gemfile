@@ -1,0 +1,6 @@
+source "https://rubygems.org"
+
+gem 'orderedhash'
+gem 'json2yaml'
+gem 'csv2json'
+

@@ -1,0 +1,133 @@
+# This is the authoritative record of the data.  The data consists of assertions in the
+# form of objects, which wrap data records in activation couplers.  Activation couplers
+# allow objects to participate actively in information indexing, reporting, and management
+# tasks.
+#
+# Authority is rooted in a git repository
+#
+# Authoritative records are organized as files in CSV, YAML, JSON, or in Notion or Kumu
+# or other 'native formats'.  These are native in the sense that they are the selected
+# representation of the Data Authority.
+#
+authority:
+  # this is the home - typically a git+ssh Url - it is passed along to the
+  # platform native git implementation
+  url: file:///tmp/gitworm
+
+  # pools define input/output scopes for types, where types are referenced in
+  # the ontology section.
+  pools:
+    # These are synced with a notion export, so the authority representation
+    # follows Notion conventions.  This is the notion managed regular meeting
+    # and email update schedule.
+    - name: dif-asia-activity                   # Id
+      type: event                               # Ontology Pool is 'event'
+      glob: /schedule/*                         # Match files of this pattern
+      render: NotionStyle                       # Following these interpretation conventions
+      mask:                                     # Apply this 'mask'
+        type: regular-meeting | email-update    #   subtype is one of these
+
+    # These are synced with a notion export, so the authority representation
+    # follows Notion conventions.
+    - name: conferences                         # Id
+      type: event
+      glob: /conferences.csv
+      render: CSVStyle
+      mask:
+        type: conference
+
+    - name: events                              # Id
+      type: event
+      glob: /events.yml
+      render: YAMLStyle
+      mask:
+        type: happening
+
+    # These are expected to be edited in github and tracked via pull requests
+    # against the repository.  This follows Jekyll Collection conventions.
+    - name: countries
+      type: country
+      glob: /countries/*
+      render: JekyllCollectionStyle
+
+    # The Company and People Information in this context is focused around a
+    # simple, limited spreadsheet containing public information - this is
+    # expected to be about "one row" per item, so it is stored as a couple of
+    # little CSV files, perhaps synced with a google sheet or forming the basis
+    # for a Kumu Sheet
+    - name: company-profile-data
+      type: company
+      glob: companies.csv
+      render: SimpleCSV
+
+    - name: contacts
+      type: person
+      glob: /people.csv
+      render: SimpleCSV
+
+# This defines the smallest unit -
+ontology:
+  event:
+  company:
+  country:
+  person:
+
+# configure external representations over the various io sources
+representations:
+  # a directory called test
+  - key: test
+    driver: git
+    repo: file:///tmp/test
+    reader: TestReader
+    writer: TestWriter
+    filter: MaskMatch
+    mask:
+      aname: avalue
+
+representationsx:
+  - key: kumu-afghanistan
+    io:
+      driver: google
+      reader:
+      writer: KumuProjector
+      filter: MaskMatch
+    mask:
+      country: aghanistan
+  - key: kumu-bahrain
+    io:
+      driver: google
+      reader:
+      writer: KumuProjector
+      filter: MaskMatch
+    mask:
+      country: bahrain
+  - key: notion
+    io:
+      driver: notion
+      reader:
+      writer: KumuProjector
+      filter: MaskMatch
+
+
+iox:
+  google:
+    reader:
+      class: GoogleSheetReader
+    writer:
+      class: GoogleSheetWriter
+  notion:
+    reader:
+      class: NotionReader
+    writer:
+  github:
+    reader:
+      class: GitHubReader
+    writer:
+
+# establishes connections between the munge arena and external systems
+io:
+  # this is for working with local git repositories, which is used to support
+  # testing.
+  git:
+    class: GitController
+    configvar: example value

@@ -1,0 +1,3 @@
+# Korea, South
+
+Continent: Asia
